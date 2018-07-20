@@ -1,0 +1,19 @@
+---
+  # Title: sec-clamav
+  #
+  # Author: Luc Rutten
+  # File: defaults/main.yml
+  #
+  # Description:
+  #   ClamAV
+
+  # Daily Settings   
+  #
+  # 
+
+  clam_msg     : 'ClamAV found {{ ansible_hostname }}'
+  clam_from    : 'clamav@bitfinity.nl'
+  clam_to      : 'lrutten@bitfinity.nl' 
+  clam_options : '-ri'
+  clam_include : '/home /opt'
+  clam_exclude : '/tmp'

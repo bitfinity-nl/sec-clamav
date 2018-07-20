@@ -1,0 +1,62 @@
+---
+  # Title: sec-clamav
+  #
+  # Author: Luc Rutten
+  # File: tasks/main.yml
+  #
+  # Description:
+  #   Open source antivirus scan engine
+
+  - name: "Install packages"
+    apt:
+      name: "{{ item }}"
+      state: latest
+      update_cache: yes
+    with_items:
+      - clamav
+      - mailutils
+
+  - name: "Stop services"
+    systemd:
+      name: clamav-freshclam
+      state: stopped
+
+  - name: "Update clamav for the first time"
+    command: freshclam
+
+  - name: "Start services"
+    systemd:
+      name: clamav-freshclam
+      state: started
+      enabled: yes
+
+  - name: "Create Ansible script directory"
+    file:
+      path: "{{ item }}"
+      state: directory
+    with_items:
+      - /opt/ansible
+      - /opt/ansible/scripts
+      - /opt/ansible/scripts/clamav
+ 
+  - name: "Transfer file(s) to /opt/ansible/scripts/clamav/" 
+    template:
+      src: scan.sh.j2
+      dest: /opt/ansible/scripts/clamav/scan_daily.sh
+      mode: 0755
+
+  - name: "Schedule daily scan"
+    cron:
+      name: "Scan every 6 hours"
+      hour: "*/1"
+      job: /opt/ansible/scripts/clamav/scan_daily.sh
+      user: root
+      state: present
+
+#  - name: "Schedule hourly scan"
+#    cron:
+#      name: "Scan every 6 hours" minute: 0
+#      hour: 6
+#      job: /opt/ansible/scripts/clamav/scan_hourly.sh
+#      user: root
+#      state: present
