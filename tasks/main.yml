@@ -45,10 +45,11 @@
       dest: /opt/ansible/scripts/clamav/scan_daily.sh
       mode: 0755
 
-  - name: "Schedule daily scan"
+  - name: "Scan at minute 0 past every 4th hour."
     cron:
-      name: "Scan every 6 hours"
-      hour: "*/1"
+      name: "Scan at minute 0 past every 4th hour."
+      minute: "0"
+      hour: "*/4"
       job: /opt/ansible/scripts/clamav/scan_daily.sh
       user: root
       state: present
