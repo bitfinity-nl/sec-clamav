@@ -23,6 +23,7 @@
 
   - name: "Update clamav for the first time"
     command: freshclam
+    ignore_errors: yes
 
   - name: "Start services"
     systemd:
@@ -49,10 +50,22 @@
     cron:
       name: "Scan at minute 0 past every 4th hour."
       minute: "0"
-      hour: "*/4"
+      hour: "*/19"
+      job: /opt/ansible/scripts/clamav/scan_daily.sh
+      user: root
+      state: absent
+
+  - name: "Scan at 1900 every day."
+    cron:
+      name: "Scan at 19:00 everyday."
+      minute: "0"
+      hour: "19"
       job: /opt/ansible/scripts/clamav/scan_daily.sh
       user: root
       state: present
+
+
+ 
 
 #  - name: "Schedule hourly scan"
 #    cron:

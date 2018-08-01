@@ -21,9 +21,9 @@ for S in ${DIRTOSCAN}; do
  if [ "$MALWARE" -ne "0" ];then
 
  # using heirloom-mailx below
- echo "$EMAIL_MSG"|mail -A "$LOGFILE" -s "Malware Found" -r "$EMAIL_FROM" "$EMAIL_TO";
+ echo "$EMAIL_MSG"|mail -A "$LOGFILE" -s "Malware Found on: {{ ansible_hostname }}" -r "$EMAIL_FROM" "$EMAIL_TO";
  else
- echo "$EMAIL_MSG"|mail -A "$LOGFILE" -s "No Malware Found" -r "$EMAIL_FROM" "$EMAIL_TO";
+ echo "$EMAIL_MSG"|mail -A "$LOGFILE" -s "No Malware Found on: {{ ansible_hostname }}" -r "$EMAIL_FROM" "$EMAIL_TO";
 
  fi
 done
