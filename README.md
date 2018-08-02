@@ -1,4 +1,4 @@
-Role Name
+sec-clamav
 =========
 
 ClamAV is an open source antivirus engine for detecting trojans, viruses,
