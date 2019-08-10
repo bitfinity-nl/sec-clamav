@@ -1,19 +1,30 @@
 ---
-  # Title: sec-clamav
-  #
-  # Author: Luc Rutten
-  # File: defaults/main.yml
-  #
-  # Description:
-  #   ClamAV
+# Title: sec-clamav
+#
+# Author: bitfinity-nl
+# File: defaults/main.yml
+#
+# Description:
+#   ClamAV is an open source antivirus engine for detecting 
+#   trojans,viruses, malware & other malicious threats.
+#
 
-  # Daily Settings   
-  #
-  # 
-
-  clam_msg     : 'ClamAV found {{ ansible_hostname }}'
-  clam_from    : 'clamav@example.net'
-  clam_to      : 'example@example.net' 
-  clam_options : '-ri'
-  clam_include : '/home /opt'
-  clam_exclude : '/tmp'
+# -- ClamAV settings --
+#
+# Variable(s):
+#   clam_msg     : 'ClamAV found {{ ansible_hostname }}'  # Set subject when an threat has been found.
+#   clam_from    : 'clamav@example.net'                   # Set from mail addres. 
+#   clam_to      : 'example@example.net'                  # Set to mail address.
+#   clam_options : '-ri'                                  # Set ClamAV options.
+#   clam_include : '/home /opt'                           # Set directories to scan.
+#   clam_exclude : '/tmp'                                 # Set directories to exclude.
+#
+# Comment:
+#   Set def_ variable(s) into groupvars or override them into your playbook.
+#
+clam_msg     : 'ClamAV found {{ ansible_hostname }}'
+clam_from    : 'clamav@{{ def_smtp_mail_domain }}'
+clam_to      : '{{ def_smtp_mail }}'' 
+clam_options : '-ri'
+clam_include : '/home /opt'
+clam_exclude : '/tmp'

@@ -1,77 +1,68 @@
----
-  # Title: sec-clamav
-  #
-  # Author: Luc Rutten
-  # File: tasks/main.yml
-  #
-  # Description:
-  #   Open source antivirus scan engine
+--
+# Title: sec-clamav
+#
+# Author: bitfinity-nl
+# File: tasks/main.yml
+#
+# Description:
+#   ClamAV is an open source antivirus engine for detecting 
+#   trojans,viruses, malware & other malicious threats.
+#
 
-  - name: "Install packages"
-    apt:
-      name: "{{ packages }}"
-      state: latest
-      update_cache: yes
-    vars:
-      packages:
-      - clamav
-      - mailutils
+- name: "Install packages"
+  apt:
+    name: "{{ packages }}"
+    state: latest
+    update_cache: yes
+  vars:
+    packages:
+    - clamav
+    - mailutils
 
-  - name: "Stop services"
-    systemd:
-      name: clamav-freshclam
-      state: stopped
+- name: "Stop services"
+  systemd:
+    name: clamav-freshclam
+    state: stopped
 
-  - name: "Update clamav for the first time"
-    command: freshclam
-    ignore_errors: yes
+- name: "Update clamav for the first time"
+  command: freshclam
+  ignore_errors: yes
 
-  - name: "Start services"
-    systemd:
-      name: clamav-freshclam
-      state: started
-      enabled: yes
+- name: "Start services"
+  systemd:
+    name: clamav-freshclam
+    state: started
+    enabled: yes
 
-  - name: "Create Ansible script directory"
-    file:
-      path: "{{ item }}"
-      state: directory
-    with_items:
-      - /opt/ansible
-      - /opt/ansible/scripts
-      - /opt/ansible/scripts/clamav
+- name: "Create Ansible script directory"
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - /opt/ansible
+    - /opt/ansible/scripts
+    - /opt/ansible/scripts/clamav
  
-  - name: "Transfer file(s) to /opt/ansible/scripts/clamav/" 
-    template:
-      src: scan.sh.j2
-      dest: /opt/ansible/scripts/clamav/scan_daily.sh
-      mode: 0755
+- name: "Transfer file(s) to /opt/ansible/scripts/clamav/" 
+  template:
+    src: scan.sh.j2
+    dest: /opt/ansible/scripts/clamav/scan_daily.sh
+    mode: 0755
 
-  - name: "Scan at minute 0 past every 4th hour."
-    cron:
-      name: "Scan at minute 0 past every 4th hour."
-      minute: "0"
-      hour: "*/19"
-      job: /opt/ansible/scripts/clamav/scan_daily.sh
-      user: root
-      state: absent
+- name: "Scan at minute 0 past every 4th hour."
+  cron:
+    name: "Scan at minute 0 past every 4th hour."
+    minute: "0"
+    hour: "*/19"
+    job: /opt/ansible/scripts/clamav/scan_daily.sh
+    user: root
+    state: absent
 
-  - name: "Scan at 1900 every day."
-    cron:
-      name: "Scan at 19:00 everyday."
-      minute: "0"
-      hour: "19"
-      job: /opt/ansible/scripts/clamav/scan_daily.sh
-      user: root
-      state: present
-
-
- 
-
-#  - name: "Schedule hourly scan"
-#    cron:
-#      name: "Scan every 6 hours" minute: 0
-#      hour: 6
-#      job: /opt/ansible/scripts/clamav/scan_hourly.sh
-#      user: root
-#      state: present
+- name: "Scan at 1900 every day."
+  cron:
+    name: "Scan at 19:00 everyday."
+    minute: "0"
+    hour: "19"
+    job: /opt/ansible/scripts/clamav/scan_daily.sh
+    user: root
+    state: present
