@@ -24,7 +24,7 @@
 #
 clam_msg     : 'ClamAV found {{ ansible_hostname }}'
 clam_from    : 'clamav@{{ def_smtp_mail_domain }}'
-clam_to      : '{{ def_smtp_mail }}'' 
+clam_to      : '{{ def_smtp_mail }}'
 clam_options : '-ri'
 clam_include : '/home /opt'
 clam_exclude : '/tmp'
